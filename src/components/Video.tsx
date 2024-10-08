@@ -1,5 +1,4 @@
 import ReactPlayer from "react-player"
-import { useSelectorApp } from "../store"
 import { useDispatch } from "react-redux"
 import { next, useCurrentLesson } from "../store/slices/player"
 
