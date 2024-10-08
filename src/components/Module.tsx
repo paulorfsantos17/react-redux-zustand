@@ -3,6 +3,8 @@ import { Lesson } from "./Lesson";
 
 import * as Collapsible from "@radix-ui/react-collapsible";
 import { useSelectorApp } from "../store";
+import { useDispatch } from "react-redux";
+import { play } from "../store/slices/player";
 
 
 interface ModuleProps {
@@ -12,6 +14,14 @@ interface ModuleProps {
 }
 
 export  function Module({amountOfLessons, title, moduleIndex} : ModuleProps) {
+  const dispatch = useDispatch()
+
+  const {currentLessonIndex, currentModuleIndex} = useSelectorApp(state => {
+    const {currentModuleIndex , currentLessonIndex} = state.player
+
+    return {currentModuleIndex, currentLessonIndex}
+  })
+
   const lessons = useSelectorApp(state => state.player.course.modules[moduleIndex].lessons)
 
   return (
@@ -30,8 +40,17 @@ export  function Module({amountOfLessons, title, moduleIndex} : ModuleProps) {
     <Collapsible.Content>
       <nav className="relative flex flex-col gap-4 p-6">
         {
-          lessons.map(lesson => {
-            return <Lesson key={lesson.id} title={lesson.title} duration={lesson.duration}/>
+          lessons.map((lesson, lessonIndex) => {
+            const isCurrent  = moduleIndex === currentModuleIndex  && 
+              lessonIndex === currentLessonIndex
+            
+            return <Lesson 
+              key={lesson.id}
+              title={lesson.title}
+              duration={lesson.duration}
+              isCurrent={isCurrent}
+              onPlay={() => dispatch(play([moduleIndex, lessonIndex]))}
+            />
           })
         }
       </nav>
