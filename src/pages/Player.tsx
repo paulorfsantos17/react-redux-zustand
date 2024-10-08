@@ -3,12 +3,14 @@ import { Header } from "../components/Header";
 import { Video } from "../components/Video";
 import { Module } from "../components/Module";
 import { useSelectorApp } from "../store";
-import { useCurrentLesson } from "../store/slices/player";
+import { start, useCurrentLesson } from "../store/slices/player";
 import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { api } from "../libs/axios";
 
 export default function Player() {
-
   const modules = useSelectorApp (state => state.player.course?.modules)
+  const dispatch = useDispatch()
 
   const {currentLesson} = useCurrentLesson()
   useEffect(() =>  {
@@ -17,6 +19,18 @@ export default function Player() {
     }
     
   }, [currentLesson])
+
+  async function getCourse() {
+    const course = await api.get("/course/1")
+    if(course) {
+      dispatch(start(course.data))
+    }
+    
+  }
+
+  useEffect(() =>  {
+    getCourse()
+  }, [])
 
   return (
     <div className="h-screen bg-zinc-950 text-zinc-50 flex justify-center items-center">
