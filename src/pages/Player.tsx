@@ -9,6 +9,8 @@ import { useEffect } from "react";
 export default function Player() {
   const modules = useSelectorApp (state => state.player.course?.modules)
 
+
+
   const dispatch = useAppDispatch()
 
 
@@ -23,6 +25,7 @@ export default function Player() {
   useEffect(() => {
     dispatch(loadCourse())
   }, [])
+
 
 
   return (
