@@ -9,10 +9,7 @@ import { useEffect } from "react";
 export default function Player() {
   const modules = useSelectorApp (state => state.player.course?.modules)
 
-
-
   const dispatch = useAppDispatch()
-
 
   const {currentLesson} = useCurrentLesson()
   useEffect(() =>  {
