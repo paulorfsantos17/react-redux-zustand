@@ -1,82 +1,77 @@
-import { createStore } from "zustand";
+import { create } from "zustand";
 import { api } from "../libs/axios";
 
-interface Course  {
-  id: number,
+interface Course {
+  id: number
   modules: Array<{
-    id: number,
-    title: string,
+    id: number
+    title: string
     lessons: Array<{
-      id: string,
-      title: string,
-      duration: string,
+      id: string
+      title: string
+      duration: string
     }>
   }>
 }
 
 export interface PlayerState {
-  course: Course | null
-  currentModuleIndex: number
-  currentLessonIndex: number
-  isLoading: boolean
-  load: () => Promise<void>
+  course: Course | null;
+  currentModuleIndex: number;
+  currentLessonIndex: number;
+  isLoading: boolean;
 
-
-  play: (moduleAndLessonIndex: [ number, number ]) => void,
-  next: () => void,
+  play: (moduleAndLessonIndex: [number, number]) => void;
+  next: () => void;
+  load: () => Promise<void>;
 }
 
-
-export const  useStore = createStore<PlayerState>((set, get) =>  {
-  return  {
+export const useStore = create<PlayerState>((set, get) => {
+  return {
     course: null,
     currentModuleIndex: 0,
     currentLessonIndex: 0,
-    isLoading: true,
-    play: (moduleAndLessonIndex: [ number, number ]) =>  {
+    isLoading: false,
+
+    load: async () => {
+      set({ isLoading: true })
+
+      const response = await api.get('/course/1')
+
+      set({
+        course: response.data,
+        isLoading: false,
+      })
+    },
+
+    play: (moduleAndLessonIndex: [number, number]) => {
       const [moduleIndex, lessonIndex] = moduleAndLessonIndex
 
       set({
         currentModuleIndex: moduleIndex,
         currentLessonIndex: lessonIndex,
       })
-    }, 
+    },
+
     next: () => {
-      const {currentLessonIndex, currentModuleIndex, course} = get()
+      const { currentLessonIndex, currentModuleIndex, course } = get()
 
-      const nextLessonIndex = currentLessonIndex + 1
-      const nextLesson = course?.modules[currentModuleIndex].lessons[nextLessonIndex]
+      const nextLessonIndex = currentLessonIndex + 1;
+      const nextLesson = course?.modules[currentModuleIndex].lessons[nextLessonIndex];
 
-      if(nextLesson) {
-
-        set({
-          currentLessonIndex: nextLessonIndex
-        })
-
+      if (nextLesson) {
+        set({ currentLessonIndex: nextLessonIndex })
       } else {
-        const nextModuleIndex = currentModuleIndex + 1
-        const nextModule = course?.modules[nextModuleIndex]
+        const nextModuleIndex = currentModuleIndex + 1;
+        const nextModule = course?.modules[nextModuleIndex];
 
-        if(nextModule) { 
+        if (nextModule) {
           set({
-            currentModuleIndex :  nextModuleIndex,
-            currentLessonIndex :  0
+            currentModuleIndex: nextModuleIndex,
+            currentLessonIndex: 0,
           })
         }
       }
-
-    },
-    load: async () =>  {
-      set({
-        isLoading: true,
-      })
-
-      const response = await api.get("/course/1")
-
-      set({
-        course: response.data,
-        isLoading: false
-      })
     }
   }
 })
+

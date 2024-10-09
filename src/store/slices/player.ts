@@ -78,14 +78,14 @@ export const playerSlice = createSlice({
 export const player  = playerSlice.reducer
 export const { play, next } = playerSlice.actions
 
-export const  useCurrentLesson = () => {
-  return useSelectorApp(state => {
-    const  { currentLessonIndex, currentModuleIndex} = state.player
+// export const  useCurrentLesson = () => {
+//   return useSelectorApp(state => {
+//     const  { currentLessonIndex, currentModuleIndex} = state.player
     
-    const currentModule =  state.player.course?.modules[currentModuleIndex]
-    const currentLesson = state.player.course?.modules[currentModuleIndex].lessons[currentLessonIndex]
+//     const currentModule =  state.player.course?.modules[currentModuleIndex]
+//     const currentLesson = state.player.course?.modules[currentModuleIndex].lessons[currentLessonIndex]
 
-    return {currentLesson, currentModule }
-  })
+//     return {currentLesson, currentModule }
+//   })
 
-}
+// }
