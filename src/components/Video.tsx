@@ -5,12 +5,10 @@ import { useCurrentLesson } from "../hooks/useCurrentLesson"
 
 
 export  function Video() {
-  // const dispatch = useAppDispatch()
   const {next} = useStore()
   const isCurrentLoading = useStore( state => state.isLoading)
 
   const {currentLesson} = useCurrentLesson()
-  // const isCurrentLoading = useSelectorApp( state => state.player.isLoading)
 
   function handlePlayerNext() {
     next()
